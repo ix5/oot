@@ -11,8 +11,8 @@ for opt in "$@"; do
     esac
 done
 
-_kernel_major=4
-_kernel_minor=14
+# _kernel_major=4
+# _kernel_minor=14
 
 if [ -z "$ANDROID_BUILD_TOP" ]; then
     ANDROID_ROOT=$(realpath "$_self_dir/../")
@@ -21,10 +21,12 @@ else
     ANDROID_ROOT="$ANDROID_BUILD_TOP"
 fi
 
-_out=$ANDROID_ROOT/out/kernel-$_kernel_major$_kernel_minor/$_compiler/$_device
+_out=$ANDROID_ROOT/out/mainline-kernel
+# $_compiler/$_device
 _kernel=$_out/arch/arm64/boot/Image.gz-dtb
 _make_vars="O=$_out ARCH=arm64 -j$(nproc)"
-_kernel_path=$(realpath $ANDROID_ROOT/kernel/sony/msm-$_kernel_major.$_kernel_minor/kernel)
+# _kernel_path=$(realpath $ANDROID_ROOT/kernel/sony/msm-$_kernel_major.$_kernel_minor/kernel)
+_kernel_path=$(realpath $ANDROID_ROOT/kernel/mainline/kernel)
 # True by default:
 if [ "$_recovery_ramdisk" = "false" ]; then
     _ramdisk=$ANDROID_ROOT/out/target/product/$_device/ramdisk.img
@@ -37,15 +39,18 @@ if [ ! -f $_ramdisk ]; then
     echo "WARNING: $_ramdisk does not exist!"
 fi
 
-_targets=Image.gz-dtb
+_targets=Image.gz
 
-if [ "$_has_dtbo" = "true" ]; then
-    _targets="$_targets dtbs"
-    _dtbo_out=$_device-dtbo.img
-fi
+# if [ "$_has_dtbo" = "true" ]; then
+_targets+=" dtbs"
+#     _dtbo_out=$_device-dtbo.img
+# fi
 
 _self_dir=$(realpath $(dirname "$0"))
 . $_self_dir/compile_$_compiler.sh
+
+cat ${_kernel%-dtb} $_out/arch/arm64/boot/dts/qcom/$_board-sony-xperia-$_platform-$_device.dtb > $_kernel
+
 . $_self_dir/create_images.sh
 
 if [ "$FASTBOOT_FLASH" = "true" ]; then

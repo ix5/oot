@@ -5,6 +5,7 @@
 # Device specific
 _platform=nile
 _device=discovery
+_board=sdm630
 
 _verity_file=build/target/product/security/verity.x509.pem
 _verity_key_id=$(openssl x509 -in $_verity_file -text | grep keyid | sed 's/://g' | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]' | sed 's/keyid//g')
@@ -15,6 +16,8 @@ BOARD_KERNEL_PAGESIZE=4096
 BOARD_KERNEL_TAGS_OFFSET=0x01E00000
 BOARD_RAMDISK_OFFSET=0x02000000
 BOARD_KERNEL_CMDLINE="lpm_levels.sleep_disabled=1 service_locator.enable=1 androidboot.memcg=1 msm_rtb.filter=0x3F ehci-hcd.park=3 coherent_pool=8M sched_enable_power_aware=1 user_debug=31 printk.devkmsg=on kpti=0 androidboot.hardware=$_device buildvariant=userdebug veritykeyid=id:$_verity_key_id"
+
+BOARD_KERNEL_CMDLINE+=" earlycon=msm_serial_dm,0xc170000 console=msm_serial_dm0"
 
 # Options
 # _permissive=true
