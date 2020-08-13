@@ -15,13 +15,19 @@ BOARD_KERNEL_BASE=0x00000000
 BOARD_KERNEL_PAGESIZE=4096
 BOARD_KERNEL_TAGS_OFFSET=0x01E00000
 BOARD_RAMDISK_OFFSET=0x02000000
-BOARD_KERNEL_CMDLINE="lpm_levels.sleep_disabled=1 service_locator.enable=1 androidboot.memcg=1 msm_rtb.filter=0x3F ehci-hcd.park=3 coherent_pool=8M sched_enable_power_aware=1 user_debug=31 printk.devkmsg=on kpti=0 androidboot.hardware=$_device buildvariant=userdebug veritykeyid=id:$_verity_key_id"
+# lpm_levels.sleep_disabled=1 service_locator.enable=1
+# BOARD_KERNEL_CMDLINE="buildvariant=userdebug veritykeyid=id:$_verity_key_id"
 
 BOARD_KERNEL_CMDLINE+=" earlycon=msm_serial_dm,0xc170000 console=msm_serial_dm0"
+# BOARD_KERNEL_CMDLINE+=" dm=\"system none ro,0 1 android-verity /dev/mmcblk0p78\""
+BOARD_KERNEL_CMDLINE+=" dm-mod.create=\"dm-verity,,0,ro,
+0 1638400 verity 1 /dev/mmcblk0p78 /dev/null 4096 4096 204800 1 sha1 $_verity_key_id\""
+# TODO: Salt?
 
 # Options
-# _permissive=true
+_permissive=true
 _compiler=linaro_gcc
+_recovery_ramdisk=false
 
 _self_dir=$(realpath $(dirname "$0"))
 . $_self_dir/compile.sh
