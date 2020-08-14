@@ -20,9 +20,9 @@ BOARD_RAMDISK_OFFSET=0x02000000
 
 BOARD_KERNEL_CMDLINE+=" earlycon=msm_serial_dm,0xc170000 console=msm_serial_dm0"
 # BOARD_KERNEL_CMDLINE+=" dm=\"system none ro,0 1 android-verity /dev/mmcblk0p78\""
-BOARD_KERNEL_CMDLINE+=" dm-mod.create=\"dm-verity,,0,ro,
-0 1638400 verity 1 /dev/mmcblk0p78 /dev/null 4096 4096 204800 1 sha1 $_verity_key_id\""
+#BOARD_KERNEL_CMDLINE+=" dm-mod.create=\"dm-verity,,0,ro,0 1638400 verity 1 /dev/mmcblk0p78 /dev/null 4096 4096 204800 1 sha1 $_verity_key_id\""
 # TODO: Salt?
+BOARD_KERNEL_CMDLINE+=" root=/dev/mmcblk1p78"
 
 # Options
 _permissive=true
